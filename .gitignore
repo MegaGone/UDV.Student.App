@@ -1,0 +1,26 @@
+# ─── Backend (NestJS / Node) ───
+NotasApp.Backend/node_modules/
+NotasApp.Backend/dist/
+NotasApp.Backend/.env
+NotasApp.Backend/*.sqlite
+NotasApp.Backend/*.sqlite3
+NotasApp.Backend/coverage/
+NotasApp.Backend/*.tsbuildinfo
+# Using npm — reject pnpm lockfiles
+NotasApp.Backend/pnpm-lock.yaml
+NotasApp.Backend/pnpm-workspace.yaml
+
+# ─── Mobile (Android / Gradle) ───
+mobile/**/.gradle/
+mobile/**/build/
+mobile/**/local.properties
+mobile/**/.idea/
+mobile/**/*.iml
+mobile/**/captures/
+mobile/**/.cxx/
+
+# ─── OS / Editor ───
+.DS_Store
+Thumbs.db
+*.log
+.atl
