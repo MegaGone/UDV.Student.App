@@ -1,23 +1,14 @@
 # ─── Backend (NestJS / Node) ───
-NotasApp.Backend/node_modules/
-NotasApp.Backend/dist/
-NotasApp.Backend/.env
-NotasApp.Backend/*.sqlite
-NotasApp.Backend/*.sqlite3
-NotasApp.Backend/coverage/
-NotasApp.Backend/*.tsbuildinfo
+UDV.Student.Backend/node_modules/
+UDV.Student.Backend/dist/
+UDV.Student.Backend/.env
+UDV.Student.Backend/*.sqlite
+UDV.Student.Backend/*.sqlite3
+UDV.Student.Backend/coverage/
+UDV.Student.Backend/*.tsbuildinfo
 # Using npm — reject pnpm lockfiles
-NotasApp.Backend/pnpm-lock.yaml
-NotasApp.Backend/pnpm-workspace.yaml
-
-# ─── Mobile (Android / Gradle) ───
-mobile/**/.gradle/
-mobile/**/build/
-mobile/**/local.properties
-mobile/**/.idea/
-mobile/**/*.iml
-mobile/**/captures/
-mobile/**/.cxx/
+UDV.Student.Backend/pnpm-lock.yaml
+UDV.Student.Backend/pnpm-workspace.yaml
 
 # ─── OS / Editor ───
 .DS_Store
