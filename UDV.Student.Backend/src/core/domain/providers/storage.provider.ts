@@ -16,4 +16,6 @@ export interface IStorageReadOptions {
 export abstract class IStorageProvider {
     public abstract generatePresignedUrl(options: IStorageProviderOptions): Promise<IStorageProviderResponse>
     public abstract generatePresignedReadUrl(options: IStorageReadOptions): Promise<string>
+    public abstract objectExists(objectKey: string): Promise<boolean>
+    public abstract deleteObject(objectKey: string): Promise<void>
 }

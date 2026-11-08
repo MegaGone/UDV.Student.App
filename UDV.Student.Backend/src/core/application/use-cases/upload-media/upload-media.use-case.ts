@@ -39,8 +39,8 @@ export class UploadMediaUseCase {
         if (!uploadUrl || uploadUrl === "")
             throw new MediaTypeUploadException(MediaExceptionCode.ERROR_UPLOADING_MEDIA, "Error uploading media");
 
-        // TODO: UPDATE COLUMN REFERNCE IN USER TABLE
-
+        // The object key is persisted on the user only after the client confirms the
+        // upload (see ConfirmAvatarUseCase); signing a URL does not mean the file exists.
         return new UploadMediaResponseDto(this._defaultMethod, uploadUrl, objectKey, this._expirationTimeInSeconds, { "Content-Type": contentType })
     }
 }
