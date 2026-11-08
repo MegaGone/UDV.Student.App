@@ -9,6 +9,7 @@ export class UserMapper {
             username: model.username,
             passwordHash: model.passwordHash,
             isActive: model.isActive,
+            avatar: model.avatar,
         });
     }
 
@@ -19,6 +20,7 @@ export class UserMapper {
             username: entity.username,
             passwordHash: entity.passwordHash,
             isActive: entity.isActive,
+            avatar: entity.avatar,
         };
     }
 }

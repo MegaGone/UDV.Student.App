@@ -18,6 +18,11 @@ export class UserRepository implements IUserRepository {
         await this._repository.save(UserMapper.toPersistence(user));
     }
 
+    public async findById(id: string): Promise<UserEntity | null> {
+        const model = await this._repository.findOne({ where: { id } });
+        return model ? UserMapper.toDomain(model) : null;
+    }
+
     public async findByEmail(email: string): Promise<UserEntity | null> {
         const model = await this._repository.findOne({ where: { email } });
         return model ? UserMapper.toDomain(model) : null;

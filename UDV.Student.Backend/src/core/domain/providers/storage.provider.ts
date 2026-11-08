@@ -8,6 +8,12 @@ export interface IStorageProviderResponse {
     uploadUrl: string;
 }
 
+export interface IStorageReadOptions {
+    expiresIn: number;
+    objectKey: string;
+}
+
 export abstract class IStorageProvider {
     public abstract generatePresignedUrl(options: IStorageProviderOptions): Promise<IStorageProviderResponse>
+    public abstract generatePresignedReadUrl(options: IStorageReadOptions): Promise<string>
 }

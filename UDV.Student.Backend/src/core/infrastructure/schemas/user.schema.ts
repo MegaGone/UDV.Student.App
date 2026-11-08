@@ -10,5 +10,6 @@ export const UserSchema = new EntitySchema<UserModel>({
         username: { type: String, unique: true },
         passwordHash: { type: String },
         isActive: { type: Boolean, default: true },
+        avatar: { type: String, nullable: true },
     }
 });

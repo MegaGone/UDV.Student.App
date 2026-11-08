@@ -3,6 +3,7 @@ import {
     StoreUserUseCase,
     UploadMediaUseCase,
     RefreshTokenUseCase,
+    GetUserProfileUseCase,
     AuthenticateUserUseCase,
 } from "./use-cases";
 import { Module } from "@nestjs/common";
@@ -14,16 +15,19 @@ import { InfrastructureModule } from "../infrastructure/infrastructure.module";
     exports: [
         LogoutUseCase,
         StoreUserUseCase,
+        UploadMediaUseCase,
         RefreshTokenUseCase,
+        GetUserProfileUseCase,
         AuthenticateUserUseCase,
     ],
     providers: [
         SeedService,
         LogoutUseCase,
         StoreUserUseCase,
+        UploadMediaUseCase,
         RefreshTokenUseCase,
+        GetUserProfileUseCase,
         AuthenticateUserUseCase,
-        UploadMediaUseCase
     ],
 })
 export class ApplicationModule { }

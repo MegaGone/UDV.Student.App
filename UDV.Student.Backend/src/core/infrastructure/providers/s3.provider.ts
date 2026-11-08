@@ -1,9 +1,9 @@
 import { Inject, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { IStorageConfiguration } from 'src/shared/configuration/storage.configuration';
-import { IStorageProvider, IStorageProviderOptions, IStorageProviderResponse } from "src/core/domain/providers/storage.provider";
+import { IStorageProvider, IStorageProviderOptions, IStorageProviderResponse, IStorageReadOptions } from "src/core/domain/providers/storage.provider";
 
 export class S3Provider implements IStorageProvider {
     private readonly _bucket: string;
@@ -40,6 +40,20 @@ export class S3Provider implements IStorageProvider {
         } catch (error) {
             this._logger.error(`[INFRA][S3 PROVIDER] ${error}`);
             return { uploadUrl: "" }
+        }
+    }
+
+    public async generatePresignedReadUrl({ expiresIn, objectKey }: IStorageReadOptions): Promise<string> {
+        try {
+            const command: GetObjectCommand = new GetObjectCommand({
+                Key: objectKey,
+                Bucket: this._bucket,
+            });
+
+            return await getSignedUrl(this._s3Client, command, { expiresIn });
+        } catch (error) {
+            this._logger.error(`[INFRA][S3 PROVIDER] ${error}`);
+            return "";
         }
     }
 }

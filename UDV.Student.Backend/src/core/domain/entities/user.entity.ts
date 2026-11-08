@@ -7,6 +7,7 @@ export type FieldsOfUserEntity = {
     readonly id?: string | null;
     readonly isActive?: boolean;
     readonly passwordHash: string;
+    readonly avatar?: string | null;
 }
 
 const USERNAME_MIN_LENGTH = 8;
@@ -18,6 +19,7 @@ export class UserEntity {
     private _username: string;
     private _isActive: boolean;
     private _passwordHash: string;
+    private _avatar: string | null;
 
     constructor(readonly _props: FieldsOfUserEntity) {
         this.assertValidEmail(_props.email);
@@ -27,6 +29,7 @@ export class UserEntity {
         this._username = _props.username.trim();
         this._passwordHash = _props.passwordHash;
         this._isActive = _props.isActive ?? true;
+        this._avatar = _props.avatar ?? null;
         this._email = _props.email.trim().toLowerCase();
     }
 
@@ -64,5 +67,9 @@ export class UserEntity {
 
     public get isActive(): boolean {
         return this._isActive;
+    }
+
+    public get avatar(): string | null {
+        return this._avatar;
     }
 }

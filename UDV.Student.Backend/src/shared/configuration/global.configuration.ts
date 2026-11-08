@@ -17,6 +17,7 @@ export interface IGlobalConfiguration {
     JWT_REFRESH_EXPIRATION: string;
     ALLOWED_MEDIA_TYPE: Array<string>;
     PRESIGNED_URL_EXPIRE_TIME: number; // SS
+    PRESIGNED_READ_URL_EXPIRE_TIME: number; // SS
 }
 
 export default registerAs<IGlobalConfiguration>("GLOBAL", () => ({
@@ -33,6 +34,7 @@ export default registerAs<IGlobalConfiguration>("GLOBAL", () => ({
     JWT_REFRESH_EXPIRATION: process.env.JWT_REFRESH_EXPIRATION || "7d",
     SCALAR_THEME: (process.env.SCALAR_THEME as ScalarTheme) || "deepSpace",
     PRESIGNED_URL_EXPIRE_TIME: +process.env.PRESIGNED_URL_EXPIRE_TIME || 300,
+    PRESIGNED_READ_URL_EXPIRE_TIME: +process.env.PRESIGNED_READ_URL_EXPIRE_TIME || 3600,
     JWT_SECRET: process.env.JWT_SECRET || "change-me-to-a-long-random-secret",
     ALLOWED_MEDIA_TYPE: process.env.ALLOWED_MEDIA_TYPE?.split(",") ?? ["image/jpeg", "image/png", "image/jpg"],
 }));

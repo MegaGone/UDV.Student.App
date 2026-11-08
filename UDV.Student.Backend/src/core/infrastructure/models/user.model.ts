@@ -4,4 +4,5 @@ export interface UserModel {
     username: string;
     isActive: boolean;
     passwordHash: string;
+    avatar?: string | null;
 }
