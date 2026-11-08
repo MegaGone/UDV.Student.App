@@ -29,6 +29,14 @@ import { RedisSessionStore } from "./providers/redis-session-store.provider";
         { provide: ITokenProvider, useClass: JwtTokenProvider },
         { provide: ICryptoProvider, useClass: BcryptCryptoProvider },
     ],
-    exports: [IUserRepository, ICryptoProvider, ITokenProvider, ISessionStore, REDIS_CLIENT, S3_CLIENT_KEY],
+    exports: [
+        REDIS_CLIENT,
+        ISessionStore,
+        S3_CLIENT_KEY,
+        ITokenProvider,
+        IUserRepository,
+        ICryptoProvider,
+        IStorageProvider,
+    ],
 })
 export class InfrastructureModule { }
