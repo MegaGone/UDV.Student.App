@@ -1,7 +1,7 @@
 import {
     LogoutUseCase,
     StoreUserUseCase,
-
+    UploadMediaUseCase,
     RefreshTokenUseCase,
     AuthenticateUserUseCase,
 } from "./use-cases";
@@ -23,6 +23,7 @@ import { InfrastructureModule } from "../infrastructure/infrastructure.module";
         StoreUserUseCase,
         RefreshTokenUseCase,
         AuthenticateUserUseCase,
+        UploadMediaUseCase
     ],
 })
 export class ApplicationModule { }
