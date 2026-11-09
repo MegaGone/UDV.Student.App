@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/network/error_messages.dart';
 import '../viewmodel/register_view_model.dart';
 
-/// Admin-only form to create a new user account.
+/// Formulario (solo admin) para crear un nuevo usuario.
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
@@ -38,7 +39,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     if (created) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User created')),
+        const SnackBar(content: Text('Usuario creado')),
       );
       Navigator.pop(context);
     }
@@ -50,7 +51,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final isLoading = state.isLoading;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create user')),
+      appBar: AppBar(title: const Text('Crear usuario')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -62,32 +63,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: 'Correo'),
                   validator: (value) =>
-                      (value == null || !value.contains('@')) ? 'Enter a valid email' : null,
+                      (value == null || !value.contains('@')) ? 'Ingresá un correo válido' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(labelText: 'Username'),
+                  decoration: const InputDecoration(labelText: 'Usuario'),
                   validator: (value) => (value == null || value.trim().length < 8)
-                      ? 'At least 8 characters'
+                      ? 'Mínimo 8 caracteres'
                       : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Password'),
+                  decoration: const InputDecoration(labelText: 'Contraseña'),
                   validator: (value) =>
-                      (value == null || value.isEmpty) ? 'Enter a password' : null,
+                      (value == null || value.isEmpty) ? 'Ingresá una contraseña' : null,
                 ),
                 const SizedBox(height: 8),
                 if (state.hasError)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      state.error.toString(),
+                      mensajeDeError(state.error!),
                       style: TextStyle(color: Theme.of(context).colorScheme.error),
                     ),
                   ),
@@ -100,7 +101,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Create'),
+                      : const Text('Crear'),
                 ),
               ],
             ),

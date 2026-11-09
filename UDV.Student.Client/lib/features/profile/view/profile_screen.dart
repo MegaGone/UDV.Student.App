@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/config/app_assets.dart';
+import '../../../core/network/error_messages.dart';
 import '../../auth/view/register_screen.dart';
 import '../../auth/viewmodel/session_view_model.dart';
 import '../model/user_profile.dart';
 import '../viewmodel/avatar_upload_view_model.dart';
 import '../viewmodel/profile_view_model.dart';
+import 'avatar_viewer_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -16,31 +19,33 @@ class ProfileScreen extends ConsumerWidget {
     final profile = ref.watch(profileViewModelProvider);
     final upload = ref.watch(avatarUploadViewModelProvider);
 
+    // Muestra las fallas de subida como snackbar sin reconstruir la pantalla.
     ref.listen(avatarUploadViewModelProvider, (_, next) {
       if (next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error.toString())),
+          SnackBar(content: Text(mensajeDeError(next.error!))),
         );
       }
     });
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Image.asset(AppAssets.logo, height: 36),
         actions: [
-          // Admin-only: shortcut to create a new user.
+          // Solo admin: atajo para crear un nuevo usuario.
           if (profile.asData?.value.isAdmin ?? false)
             IconButton(
               icon: const Icon(Icons.person_add),
-              tooltip: 'Create user',
+              tooltip: 'Crear usuario',
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const RegisterScreen()),
               ),
             ),
           IconButton(
             icon: const Icon(Icons.logout),
+            tooltip: 'Cerrar sesión',
             onPressed: () {
-              // Drop the previous user's cached state so the next login refetches.
+              // Limpia el estado del usuario anterior para que el próximo login recargue.
               ref.invalidate(profileViewModelProvider);
               ref.invalidate(avatarUploadViewModelProvider);
               ref.read(sessionProvider.notifier).logout();
@@ -51,7 +56,7 @@ class ProfileScreen extends ConsumerWidget {
       body: profile.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => _ErrorView(
-          message: error.toString(),
+          message: mensajeDeError(error),
           onRetry: () => ref.invalidate(profileViewModelProvider),
         ),
         data: (user) => _ProfileBody(
@@ -84,20 +89,22 @@ class _ProfileBody extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 64,
-                  backgroundImage:
-                      user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
-                  child: user.avatarUrl == null
-                      ? const Icon(Icons.person, size: 64)
-                      : null,
-                ),
-                if (isUploading)
-                  const CircularProgressIndicator(),
-              ],
+            GestureDetector(
+              onTap: user.avatarUrl == null ? null : () => _openViewer(context),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 64,
+                    backgroundImage:
+                        user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
+                    child: user.avatarUrl == null
+                        ? const Icon(Icons.person, size: 64)
+                        : null,
+                  ),
+                  if (isUploading) const CircularProgressIndicator(),
+                ],
+              ),
             ),
             const SizedBox(height: 24),
             Text(user.username, style: Theme.of(context).textTheme.headlineSmall),
@@ -107,10 +114,18 @@ class _ProfileBody extends StatelessWidget {
             FilledButton.icon(
               onPressed: isUploading ? null : () => _showSourceSheet(context),
               icon: const Icon(Icons.photo_camera),
-              label: const Text('Change photo'),
+              label: const Text('Cambiar foto'),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _openViewer(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => AvatarViewerScreen(imageUrl: user.avatarUrl!),
       ),
     );
   }
@@ -123,7 +138,7 @@ class _ProfileBody extends StatelessWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.photo_camera),
-              title: const Text('Take a photo'),
+              title: const Text('Tomar una foto'),
               onTap: () {
                 Navigator.pop(sheetContext);
                 onPick(ImageSource.camera);
@@ -131,7 +146,7 @@ class _ProfileBody extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('Choose from gallery'),
+              title: const Text('Elegir de la galería'),
               onTap: () {
                 Navigator.pop(sheetContext);
                 onPick(ImageSource.gallery);
@@ -158,7 +173,7 @@ class _ErrorView extends StatelessWidget {
         children: [
           Text(message, textAlign: TextAlign.center),
           const SizedBox(height: 16),
-          OutlinedButton(onPressed: onRetry, child: const Text('Retry')),
+          OutlinedButton(onPressed: onRetry, child: const Text('Reintentar')),
         ],
       ),
     );
