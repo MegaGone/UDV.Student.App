@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../auth/view/register_screen.dart';
 import '../../auth/viewmodel/session_view_model.dart';
 import '../model/user_profile.dart';
 import '../viewmodel/avatar_upload_view_model.dart';
@@ -27,9 +28,23 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Profile'),
         actions: [
+          // Admin-only: shortcut to create a new user.
+          if (profile.asData?.value.isAdmin ?? false)
+            IconButton(
+              icon: const Icon(Icons.person_add),
+              tooltip: 'Create user',
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const RegisterScreen()),
+              ),
+            ),
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(sessionProvider.notifier).logout(),
+            onPressed: () {
+              // Drop the previous user's cached state so the next login refetches.
+              ref.invalidate(profileViewModelProvider);
+              ref.invalidate(avatarUploadViewModelProvider);
+              ref.read(sessionProvider.notifier).logout();
+            },
           ),
         ],
       ),

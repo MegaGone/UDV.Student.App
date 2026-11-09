@@ -32,6 +32,6 @@ export class GetUserProfileUseCase {
             ? await this._storageProvider.generatePresignedReadUrl({ objectKey: user.avatar, expiresIn: this._avatarUrlExpiresIn })
             : null;
 
-        return new GetUserProfileResponseDto(user.id, user.email, user.username, avatarUrl || null);
+        return new GetUserProfileResponseDto(user.id, user.email, user.username, user.role, avatarUrl || null);
     }
 }
