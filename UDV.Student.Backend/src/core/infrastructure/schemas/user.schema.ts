@@ -1,5 +1,6 @@
 import { EntitySchema } from "typeorm";
 import { UserModel } from "../models/user.model";
+import { UserRole } from "../../domain/enums/user-role.enum";
 
 export const UserSchema = new EntitySchema<UserModel>({
     name: "User",
@@ -11,5 +12,6 @@ export const UserSchema = new EntitySchema<UserModel>({
         passwordHash: { type: String },
         isActive: { type: Boolean, default: true },
         avatar: { type: String, nullable: true },
+        role: { type: String, default: UserRole.USER },
     }
 });

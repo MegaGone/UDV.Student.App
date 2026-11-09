@@ -1,8 +1,10 @@
+import { UserRole } from "../enums/user-role.enum";
 import { UserExceptionCode } from "../enums/exception.enum";
 import { InvalidValueException } from "../exceptions/invalid-value.exception";
 
 export type FieldsOfUserEntity = {
     readonly email: string;
+    readonly role?: UserRole;
     readonly username: string;
     readonly id?: string | null;
     readonly isActive?: boolean;
@@ -16,6 +18,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export class UserEntity {
     private _id: string;
     private _email: string;
+    private _role: UserRole;
     private _username: string;
     private _isActive: boolean;
     private _passwordHash: string;
@@ -26,10 +29,11 @@ export class UserEntity {
         this.assertValidUsername(_props.username);
 
         this._id = _props.id;
+        this._avatar = _props.avatar ?? null;
         this._username = _props.username.trim();
         this._passwordHash = _props.passwordHash;
         this._isActive = _props.isActive ?? true;
-        this._avatar = _props.avatar ?? null;
+        this._role = _props.role ?? UserRole.USER;
         this._email = _props.email.trim().toLowerCase();
     }
 
@@ -71,5 +75,9 @@ export class UserEntity {
 
     public get avatar(): string | null {
         return this._avatar;
+    }
+
+    public get role(): UserRole {
+        return this._role;
     }
 }

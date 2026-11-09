@@ -1,5 +1,8 @@
+import { UserRole } from "src/core/domain/enums/user-role.enum";
+
 export class StoreUserRequestDto {
     email: string;
+    role?: UserRole;
     username: string;
     password: string;
 }

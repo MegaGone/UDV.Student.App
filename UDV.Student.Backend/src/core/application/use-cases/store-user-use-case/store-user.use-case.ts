@@ -13,7 +13,7 @@ export class StoreUserUseCase {
         private readonly _cryptoProvider: ICryptoProvider,
     ) { }
 
-    public async execute({ email, username, password }: StoreUserRequestDto): Promise<StoreUserResponseDto> {
+    public async execute({ email, username, password, role }: StoreUserRequestDto): Promise<StoreUserResponseDto> {
         const existingUser = await this._userRepository.findByEmail(email);
 
         if (existingUser)
@@ -21,7 +21,7 @@ export class StoreUserUseCase {
 
         const passwordHash = await this._cryptoProvider.cipher(password);
 
-        const user = new UserEntity({ email, username, passwordHash });
+        const user = new UserEntity({ email, username, passwordHash, role });
 
         await this._userRepository.store(user);
 

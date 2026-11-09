@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import { ConfigService } from "@nestjs/config";
+import { UserRole } from "../../domain/enums/user-role.enum";
 import { StoreUserUseCase } from "../../application/use-cases";
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { IGlobalConfiguration } from "../../../shared/configuration/global.configuration";
@@ -28,13 +29,13 @@ export class SeedService implements OnApplicationBootstrap {
 
     private async seedUsers(password: string): Promise<void> {
         const users = [
-            { email: "catedratico@udv.edu.gt", username: "catedratico" },
-            { email: "estudiante@udv.edu.gt", username: "estudiante" },
+            { email: "estudiante@udv.edu.gt", username: "estudiante", role: UserRole.USER },
+            { email: "catedratico@udv.edu.gt", username: "catedratico", role: UserRole.ADMIN },
         ];
 
         for (const user of users) {
             await this._storeUserUseCase.execute({ ...user, password });
-            this._logger.log(`Seeded user: ${user.email}`);
+            this._logger.log(`Seeded user: ${user.email} (${user.role})`);
         }
     }
 }
