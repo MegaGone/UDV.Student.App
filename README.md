@@ -13,7 +13,7 @@ El repositorio contiene dos proyectos:
 
 ---
 
-## Arquitectura (resumen)
+## Arquitectura
 
 - **Backend:** arquitectura hexagonal (dominio / aplicación / infraestructura / presentación).
   Autenticación con JWT (access + refresh), sesiones en Redis, control de acceso por
