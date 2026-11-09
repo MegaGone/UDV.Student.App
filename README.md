@@ -49,22 +49,22 @@ docker compose up -d
 - MinIO API: `http://localhost:9000`
 - MinIO consola web: `http://localhost:9001` (usuario/clave: `minioadmin` / `minioadmin`)
 
-El servicio `backend` monta el código fuente, así que cualquier cambio recompila
+El servicio `backend` monta el código fuente, por lo que cualquier cambio recompila
 automáticamente (NestJS `--watch`). Dentro de la red de Docker el backend alcanza a
 Redis y MinIO por nombre de servicio (`redis`, `minio`); por eso el compose fuerza
 `REDIS_HOST=redis`.
 
-> La primera vez, para sembrar los usuarios con sus roles, levantá el backend una vez
-> con `RESET_ALL_ON_STARTUP=1` y `SQL_SYNCHRONIZE=1` en el `.env`, y luego quitálos.
+> La primera vez, para sembrar los usuarios con sus roles, iniciar el backend una vez
+> con `RESET_ALL_ON_STARTUP=1` y `SQL_SYNCHRONIZE=1` en el `.env`, y luego quitarlos.
 
 ### 1.2. Crear el bucket en MinIO
 
-MinIO **no crea el bucket automáticamente**. Entrá a la consola web
-(`http://localhost:9001`) y creá un bucket llamado **`images`**.
+MinIO **no crea el bucket automáticamente**. Ingresar a la consola web
+(`http://localhost:9001`) y crear un bucket llamado **`images`**.
 
 ### 1.3. Variables de entorno
 
-Copiá el ejemplo y ajustá lo que necesites:
+Copiar el ejemplo y ajustar lo necesario:
 
 ```bash
 cp .env.example .env
@@ -86,14 +86,15 @@ Variables relevantes:
 
 > **Nota para dispositivo/emulador:** `STORAGE_PUBLIC_ENDPOINT` es el host con el
 > que se firman las URLs de las imágenes, y el teléfono las consume tal cual. Si el
-> backend corre en Docker y el avatar lo sube un dispositivo, poné ahí la **IP de tu
-> PC en la red local** (ej. `http://192.168.1.X:9000`): ese host lo alcanzan tanto el
-> teléfono como el contenedor del backend. `localhost` solo sirve si todo corre en la
-> misma máquina.
+> backend corre en Docker y el avatar lo sube un dispositivo, se debe indicar la **IP
+> del equipo en la red local** (ej. `http://192.168.1.X:9000`): ese host lo alcanzan
+> tanto el teléfono como el contenedor del backend. `localhost` solo sirve si todo
+> corre en la misma máquina.
 
 ### 1.4. Correr el backend fuera de Docker (alternativa)
 
-Si preferís correrlo local (necesitás Redis y MinIO igualmente, vía `docker compose up -d redis minio`):
+Para ejecutarlo de forma local (requiere Redis y MinIO igualmente, mediante
+`docker compose up -d redis minio`):
 
 ```bash
 pnpm install
@@ -142,41 +143,41 @@ flutter pub get
 
 ### 2.2. Correr la app
 
-La URL del backend se pasa por `--dart-define=API_HOST`, según dónde corras la app:
+La URL del backend se pasa por `--dart-define=API_HOST`, según dónde se ejecute la app:
 
-**Emulador Android** (el loopback del emulador hacia tu PC es `10.0.2.2`):
+**Emulador Android** (el loopback del emulador hacia la PC es `10.0.2.2`):
 
 ```bash
 flutter run --dart-define=API_HOST=http://10.0.2.2:3000
 ```
 
-**Dispositivo físico** (misma red WiFi; usá la IP de tu PC):
+**Dispositivo físico** (misma red WiFi; usar la IP del equipo):
 
 ```bash
 flutter run --dart-define=API_HOST=http://192.168.1.X:3000
 ```
 
-> `--dart-define` es de tiempo de compilación: si cambiás el valor, detené y
-> volvé a correr `flutter run` (no alcanza con hot reload).
+> `--dart-define` es de tiempo de compilación: al cambiar el valor, se debe detener
+> y volver a ejecutar `flutter run` (no alcanza con hot reload).
 
 ### 2.3. Notas para dispositivo físico
 
-- El teléfono y la PC deben estar en la **misma red WiFi**.
-- Permití los puertos `3000` (API) y `9000` (MinIO) en el firewall de tu PC.
+- El teléfono y el equipo deben estar en la **misma red WiFi**.
+- Permitir los puertos `3000` (API) y `9000` (MinIO) en el firewall del equipo.
 - Para que la foto suba desde el dispositivo, el backend debe firmar las URLs con
-  un host alcanzable: ajustá `STORAGE_PUBLIC_ENDPOINT` a `http://<IP_DE_TU_PC>:9000`.
-- Activá **Depuración USB** en el teléfono y verificá con `flutter devices`.
+  un host alcanzable: ajustar `STORAGE_PUBLIC_ENDPOINT` a `http://<IP_DEL_EQUIPO>:9000`.
+- Activar la **Depuración USB** en el teléfono y verificar con `flutter devices`.
 
-### Cómo encontrar tu IP privada (IPv4)
+### Cómo encontrar la IP privada (IPv4)
 
-Esa IP (`<IP_DE_TU_PC>`) es la que usás tanto en `--dart-define=API_HOST` como en
-`STORAGE_PUBLIC_ENDPOINT`. Buscá la del adaptador WiFi activo:
+Esa IP (`<IP_DEL_EQUIPO>`) es la que se usa tanto en `--dart-define=API_HOST` como en
+`STORAGE_PUBLIC_ENDPOINT`. Corresponde al adaptador WiFi activo:
 
 **Windows** (PowerShell o CMD):
 
 ```powershell
 ipconfig
-# Buscá "Dirección IPv4" en tu adaptador de Wi-Fi (ej. 192.168.1.6)
+# Buscar "Dirección IPv4" en el adaptador de Wi-Fi (ej. 192.168.1.6)
 ```
 
 **Linux:**
@@ -189,11 +190,11 @@ hostname -I | awk '{print $1}'
 **macOS:**
 
 ```bash
-ipconfig getifaddr en0     # en0 suele ser Wi-Fi (probá en1 si no)
+ipconfig getifaddr en0     # en0 suele ser Wi-Fi (probar en1 si no corresponde)
 ```
 
-> Es una IP privada (empieza con `192.168.`, `10.` o `172.16`–`172.31`). No uses la
-> IP pública ni `127.0.0.1`.
+> Es una IP privada (comienza con `192.168.`, `10.` o `172.16`–`172.31`). No debe
+> usarse la IP pública ni `127.0.0.1`.
 
 ---
 
