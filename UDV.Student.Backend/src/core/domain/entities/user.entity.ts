@@ -80,4 +80,8 @@ export class UserEntity {
     public get role(): UserRole {
         return this._role;
     }
+
+    public changeAvatar(avatar: string): void {
+        this._avatar = avatar;
+    }
 }

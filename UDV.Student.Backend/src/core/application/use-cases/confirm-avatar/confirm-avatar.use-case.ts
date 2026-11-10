@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { UserEntity } from "src/core/domain/entities/user.entity";
 import { IStorageProvider } from "src/core/domain/providers/storage.provider";
 import { IUserRepository } from "src/core/domain/repositories/user.repository";
 import { ConfirmAvatarRequestDto, ConfirmAvatarResponseDto } from "./confirm-avatar.dto";
@@ -16,8 +15,6 @@ export class ConfirmAvatarUseCase {
     ) { }
 
     public async execute({ userId, objectKey }: ConfirmAvatarRequestDto): Promise<ConfirmAvatarResponseDto> {
-        // The key is minted as `${userId}/...`; reject any key that is not the caller's
-        // so a user cannot claim another user's (or an arbitrary) object.
         if (!objectKey.startsWith(`${userId}/`))
             throw new MediaTypeNotAllowedException(MediaExceptionCode.INVALID_MEDIA_TYPE, "Object key does not belong to the user");
 
@@ -33,14 +30,8 @@ export class ConfirmAvatarUseCase {
 
         const previousAvatar = user.avatar;
 
-        await this._userRepository.store(new UserEntity({
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            isActive: user.isActive,
-            passwordHash: user.passwordHash,
-            avatar: objectKey,
-        }));
+        user.changeAvatar(objectKey);
+        await this._userRepository.store(user);
 
         // Only after the new avatar is persisted, drop the previous object.
         if (previousAvatar && previousAvatar !== objectKey)
